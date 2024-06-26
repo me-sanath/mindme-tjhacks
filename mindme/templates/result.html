@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div uk-grid class="uk-width-1-1" style="height: 100vh">
+    <div class="uk-width-1-6" style="background-color: #FE8181; height: 100%;"></div>
+    <div style="display: block; overflow: hidden; height: 100%; position: relative;">
+        <div class="uk-flex uk-flex-center uk-width-1-1 uk-height-1-1" style="position: absolute;">
+            <div style="width: 50%; height:60%; background-color: white; margin-top: 100px; margin-left: 60px; border-radius: 25px; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px; border-width: 2px; border-color: black;">
+                <div class="uk-width-1-1 uk-flex uk-flex-center">
+                    <div>
+                        <div class="uk-text-large uk-text-bold uk-padding hero-font uk-text-center" style="font-size: 40px;">{{ title }}</div>
+                        <img src="{% static image_src %}" alt="" style="height: 80px; margin-left: 40%;">
+                        <div style="overflow-wrap: break-word; margin-top: 50px; font-size: 18px;" class="uk-align-center uk-text-center uk-text-bold hero-font description">
+                            {{ message }}
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+        <img src="{% static background_image %}" alt="" style="margin-top: 40vh;">
+    </div>
+</div>
+
+{% endblock content %}

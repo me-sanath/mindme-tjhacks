@@ -12,3 +12,89 @@
 .submitbutton:hover{
     background-color: whitesmoke;
 }
+
+.synefont{
+    font-family: "Syne", sans-serif;
+}
+
+.nav-text{
+    color: white;
+}
+
+.nav-text:hover{
+    color: grey;
+    text-decoration: none;
+}
+
+.login{
+    width: 100px;
+    background-color: #EA4C89;
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.login:hover{
+    background-color: #e692b2;
+    text-decoration: none;
+
+}
+
+.img-shadow{
+    filter: drop-shadow(20px 20px 4px #79510057);
+}
+
+.hero-font{
+    font-family: "Zen Kaku Gothic New", sans-serif;
+}
+
+.get-started{
+    width: 100px;
+    background-color: #EA4C89;
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    height: 50px;
+    line-height: 50px;
+    margin: 60px; 
+    margin-top: 30px; 
+    background-color: #FE8181;
+}
+
+.get-started:hover{
+    background-color:rgb(255, 88, 149);
+}
+
+.chat-input{
+    height: 40px;
+    width: 95%; 
+    background-color:rgb(243, 243, 243); 
+    margin-top: 10px; 
+    border-radius: 10px;
+    border-style: none;
+}
+
+.description {
+    width: 60%; /* Adjust the width as needed */
+    word-wrap: break-word;
+    white-space: normal;
+    margin: 0 auto; /* Center the text */
+}
+
+.img-option{
+    display: block;
+    overflow: hidden;
+    background-color: white;
+    margin: 4px;
+    width: 200px; 
+    height: 150px;
+    border-radius: 10px;
+}
