@@ -28,3 +28,6 @@ def register_view(request):
     else:
         form = UserCreationForm()
     return render(request, 'register/register.html', {'form': form})
+
+def home(request):
+    return render(request,'home.html')
