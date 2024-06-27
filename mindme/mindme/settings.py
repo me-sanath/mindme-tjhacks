@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'authconfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,10 +45,18 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Example frontend origin
+    'http://127.0.0.1:5500',   # Django server origin (if frontend and backend are on the same server)
+    # Add more origins as needed
 ]
 
 ROOT_URLCONF = 'mindme.urls'
@@ -102,6 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
 
 
 # Internationalization

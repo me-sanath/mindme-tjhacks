@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Evaluator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/css/uikit.min.css" />
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit-icons.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Mood Evaluator</h1>
+        <form id="moodForm">
+            {% csrf_token %}
+            {% for index, question in questions %}
+                <div class="question">
+                    <p class="uk-text-large uk-text-bold">{{ question }}</p>
+                    {% for option in options[index] %}
+                        <input type="radio" id="option{{ index }}{{ forloop.counter0 }}" name="question{{ index }}" value="{{ option.text }}">
+                        <label for="option{{ index }}{{ forloop.counter0 }}">
+                            <img src="{% static 'images/' %}{{ option.image }}" alt="{{ option.text }}" width="100">
+                            <br>{{ option.text }}
+                        </label><br>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </form>
+        <button onclick="submitForm()">Submit</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Questions and options from Python converted to JavaScript
+        const questions = [
+            {% for question in questions %}
+                "{{ question }}",
+            {% endfor %}
+        ];
+
+        const options = [
+            {% for option_group in options %}
+                [
+                    {% for option in option_group %}
+                        {"text": "{{ option.text }}", "image": "{{ option.image }}"},
+                    {% endfor %}
+                ],
+            {% endfor %}
+        ];
+
+        // Function to populate questions dynamically
+        function populateQuestions() {
+            const form = document.getElementById('moodForm');
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+                questionDiv.innerHTML = `<p class="uk-text-large uk-text-bold">${question}</p>`;
+                options[index].forEach((option, idx) => {
+                    questionDiv.innerHTML += `
+                        <input type="radio" id="option${index}${idx}" name="question${index}" value="${option.text}">
+                        <label for="option${index}${idx}">
+                            <img src="{% static 'images/${option.image}' %}" alt="${option.text}" width="100">
+                            <br>${option.text}
+                        </label><br>`;
+                });
+                form.appendChild(questionDiv);
+            });
+        }
+
+        // Function to calculate mood evaluation
+        function evaluateMood(choices) {
+            const scores = {
+                "A person laughing with friends": 2,
+                "A person calmly meditating": 2,
+                "A person looking worried with furrowed brow": -1,
+                "A person with a blank expression": 0,
+                "A person looking well-rested and smiling getting out of bed": 2,
+                "A person tossing and turning in bed at night": -1,
+                "A person hitting the snooze button on their alarm clock": 0,
+                "A person yawning during the day": -1,
+                "A person running energetically outdoors": 2,
+                "A person walking briskly with a determined look": 1,
+                "A person slowly dragging themselves through the day": -1,
+                "A person slumped on a couch feeling drained": -2,
+                "A group of friends laughing and having fun together": 2,
+                "A person enjoying a quiet coffee date with one friend": 1,
+                "A person scrolling through social media alone": 0,
+                "An empty park bench": -1,
+                "A person taking deep breaths and focusing on their meditation": 2,
+                "A person listening to calming music with headphones on": 1,
+                "A person yelling into a pillow": -1,
+                "A person clenching their fists in frustration": -2,
+                "A person looking at a vision board with a determined expression": 2,
+                "A person climbing a mountain with a sense of accomplishment": 2,
+                "A person looking lost and unsure in a forest": -1,
+                "A person crumpling up a piece of paper with frustration": -2,
+                "A person enjoying a healthy and balanced meal": 2,
+                "A person skipping a meal and feeling hungry": -1,
+                "A person mindlessly snacking": 0,
+                "A person looking at food with a lack of interest": -2,
+                "A person smiling and confidently looking in the mirror": 2,
+                "A person exercising and taking care of their physical health": 1,
+                "A person hiding their body under baggy clothes": -1,
+                "A person on a scale looking down with disappointment": -2,
+                "A beautiful sunrise with a hopeful message": 2,
+                "A path leading up a hilltop with a bright future ahead": 1,
+                "A dark and stormy sky": -2,
+                "A dead end with nowhere to go": -2,
+                "A person talking to a therapist and feeling listened to": 2,
+                "A person holding hands with a supportive friend": 1,
+                "A person sitting alone with a question mark above their head": 0,
+                "A phone with a helpline number displayed on the screen": 1
+            };
+
+            const totalScore = choices.reduce((acc, choice) => acc + scores[choice], 0);
+
+            if (totalScore >= 10) {
+                return "Good";
+            } else if (totalScore >= 0) {
+                return "Average";
+            } else {
+                return "Bad";
+            }
+        }
+
+        // Function to handle form submission
+        function submitForm() {
+            const form = document.getElementById('moodForm');
+            const formData = new FormData(form);
+            const choices = [];
+            for (const entry of formData.entries()) {
+                choices.push(entry[1]);
+            }
+            const mood = evaluateMood(choices);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p>Your general mood is: ${mood}</p>`;
+
+            // Send mood evaluation result to Django backend using AJAX
+            const url = '{% url "results" %}';
+            const data = { mood: mood };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',  // Ensure CSRF token is included
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Redirect to a new page on success
+                window.location.href = '{% url "results_page" mood %}';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // Optionally handle error
+            });
+        }
+
+        // Populate questions on page load
+        populateQuestions();
+    </script>
+</body>
+</html>

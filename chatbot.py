@@ -1,14 +1,16 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import requests
 import json
 
 app = Flask(__name__)
+CORS(app)  # This will enable CORS for all routes
 
 # Dialogflow endpoint and headers
 url = "https://dialogflow.googleapis.com/v2/projects/mindme-427009/agent/sessions/f94b87d7-0ced-9e5a-e05c-86e3a2f2a246:detectIntent"
 headers = {
     "Content-Type": "application/json; charset=utf-8",
-    "Authorization": "Bearer ya29.a0AXooCgtwDI6AOOWlcSysL7L9OKKjjjEsniLSCCSQ7krKtj3W5oorMrH7GzDbmKJVhwCurOv6FPVmN8jF8CPjUEnqzkvMWtLYL-vEkZoPJ688vBZxoSvFNnuA1JgMbe3yK4zym6PwoIjC-K8mzCDTAFBWS7ZIRVuq6mKyjEP_QjLs5iwnVy8lzo7X0MwqeKZxrmD-IHBh2z0H4yRAuyfkdVS2Dzdhcc6XEGcXmdlbBT4nwhfm1T8SByP2gUure0CdNDl47cEdD2O1LOlGd6rDRHyVKwZzLA7L3a97yd-e_mL-Ym0d4XT-DFoRkcMm81ugWmcmbuaiEgQur4cnOoAYZs5Os2Ebk-tlwUsL2f62Q8EheuJLF5hjsDwvqJzgBuSkHXmj3iYpXhxepYXXB8ulRRJ2-FooXFRCMSDagwaCgYKARcSARASFQHGX2MiAJSugzlOdgbrAY4xl6RK6g0429"
+    "Authorization": "Bearer ya29.a0AXooCgta84DPHRXk0XyfRhWibJM1Al6tn1Lrvuo9xul0VJWCTH0x40hQq1EeTsJtnL7bTEUtsujsJ2xhK7QphT5pmPOGezT1trPEGDzNOG3zE_JNP5qh0cEyI8qwwgv-R3TTNS47aGMXU9Yi0LeoK0o-Mx4LxoDgibW6ZSyauyDdG0slHN5xAskU3vli76iN5lsEOIL_J9N0PPN7jEQlhJH-ox962SRyyq2ZgMNltwpCh_eks6wl6bnhKLgJXQm2RXSJcatWh7ls34tZaGlmTJqPjvlS9p_qM5pFhvz3EOfsBh9vtwud-iWQaoi-ZmoR950EN9USrANDBCAsIveykomwOzDhHEA-u52JHNGEmAPqb8GTNY42ly3NlTG_7S6yU2u3pqY5yXQjk2tPD1RWnpVR5rwQhh65ir6bLSYaCgYKAdASARASFQHGX2MirbyzIdh81ktfp-jFJ6a-0g0430"
 }
 
 def detect_intent(text):
@@ -39,6 +41,7 @@ def detect_intent(text):
         fulfillment_text = response_json['queryResult']['fulfillmentText']
         return intent_name, fulfillment_text
     else:
+        print(response)
         return None, "Error: Unable to process request"
 
 @app.route('/query', methods=['POST'])
@@ -54,11 +57,18 @@ def query():
     intent, fulfillment = detect_intent(input_text)
 
     # Return JSON response
-    return jsonify({
+    response = jsonify({
         'input_text': input_text,
         'intent': intent,
         'fulfillment': fulfillment
     })
+    # Set CORS headers for the response
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
