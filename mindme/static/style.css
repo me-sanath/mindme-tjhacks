@@ -88,21 +88,63 @@
     white-space: normal;
     margin: 0 auto; /* Center the text */
 }
-
-.img-option{
-    display: block;
-    overflow: hidden;
-    background-color: white;
-    margin: 4px;
-    width: 200px; 
-    height: 150px;
-    border-radius: 10px;
-}
-
 .card{
-    background-color: #3F6E97; margin: 10px;width: 300px; height: 300px;border-radius: 50px;display: block; overflow: hidden;padding: 0;
+    background-color: #3F6E97; margin: 10px;width: 300px; height: 350px;border-radius: 50px;display: block; overflow: hidden;padding: 0;
 }
 
 .card:hover{
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.img-option {
+    display: inline-block;
+    margin: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.img-option img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+/* Hover Effect */
+.img-option:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Selected Mood */
+.img-option.selected {
+    transform: scale(1.1);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+    border: 3px solid #007bff; /* Blue border for selected */
+}
+
+/* Flexbox for alignment */
+.mood-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px;
+}
+.custom-button {
+    background-color: #005BB5; /* Blue background color */
+    color: white; /* White text color */
+    border: none; /* Remove default border */
+    border-radius: 20px; /* Rounded corners */
+    padding: 5px 10px; /* Padding for size adjustment */
+    font-size: 16px; /* Font size */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    cursor: pointer; /* Pointer cursor on hover */
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.custom-button:hover {
+    background-color: #004494; /* Darker blue on hover */
 }

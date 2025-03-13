@@ -1,42 +1,71 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+
 <div>
     <div class="uk-width-1-1" style="display: block; overflow: hidden; height: 100vh; position: relative;">
-        <div style="position: absolute; margin-top: 40px; " class="uk-grid">
-            <div><img src="{% static 'logo.png'%}" style="height: 55px; margin-left: 5vw;"></div>
-            <div style="padding-top: 15px; color: rgb(123, 0, 96); font-size: large;" class="uk-text-bold uk-text-medium hero-font" >MindMe</div>
+        <!-- Logo and Title -->
+        <div style="position: absolute; margin-top: 40px;" class="uk-grid">
+            <div><img src="{% static 'mood/logo.png' %}" style="height: 55px; margin-left: 5vw;"></div>
+            <div style="padding-top: 15px; color: rgb(123, 0, 96); font-size: large; padding-left: 2rem;" class="uk-text-bold uk-text-medium hero-font">MindMe</div>
         </div>
+
+        <!-- Mood Question -->
         <div uk-grid class="uk-width-1-1" style="position: absolute;">
             <div class="uk-width-2-3"></div>
             <div>
                 <div style="width: 400px; word-wrap: break-word; color: white; margin-top: 100px;">
                     <div style="font-size: 46px;">How’s your MOOD today?</div>
                 </div>
-                <div style="margin: 30px;">
-                    <div class="uk-grid">
-                        <div class="img-option" >
-                            <img src="{% static %}" alt="" width="100px">
+
+                <!-- Mood Selection Form -->
+                <form id="moodForm" method="POST" action="{% url 'ques' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="selected_mood" id="selectedMood">
+
+                    <div style="margin: 30px;">
+                        <div class="uk-grid">
+                            <div class="img-option" onclick="selectMood(this, 'Happy')">
+                                <img src="{% static 'mood/happy.jpg' %}" alt="Happy" width="100px">
+                            </div>
+                            <div class="img-option" onclick="selectMood(this, 'Neutral')">
+                                <img src="{% static 'mood/smily.png' %}" alt="Neutral" width="100px">
+                            </div>
                         </div>
-                        <div class=" img-option">
-                            <img src="{% static 'asthetic.png'%}" alt="" width="100px">
+                        <div class="uk-grid" style="margin-top: 0;">
+                            <div class="img-option" onclick="selectMood(this, 'Sad')">
+                                <img src="{% static 'mood/sad.jpg' %}" alt="Sad" width="100px">
+                            </div>
+                            <div class="img-option" onclick="selectMood(this, 'Stressed')">
+                                <img src="{% static 'mood/asthetic.png' %}" alt="Stressed" width="100px">
+                            </div>
                         </div>
                     </div>
-                    <div class="uk-grid" style="margin-top: 0;">
-                        <div class="img-option">
-                            <img src="{% static 'asthetic.png'%}" alt="" width="1000px">
-                        </div>
-                        <div class="img-option">
-                            <img src="{% static 'asthetic.png'%}" alt="" width="100px">
-                        </div>
+
+                    <!-- Next Button -->
+                    <div class="uk-width-1-1 uk-flex uk-flex-right" style="padding-right: 50px;">
+                        <button class="uk-button uk-button-primary" onclick="goToNextPage()">Next</button>
                     </div>
-                </div>
-                <div class="uk-width-1-1 uk-flex uk-flex-right" style="padding-right: 50px;">
-                    <button class="uk-button uk-button-primary">Next</button>
-                </div>
+                </form>
             </div>
         </div>
-        <img src="{% static 'ques_bck.jpeg'%}" alt="" style="width: 100%;">
+
+        <!-- Background Image -->
+        <img src="{% static 'mood/ques_bck.jpeg' %}" alt="Background" style="width: 100vw; height: 100vh; object-fit: cover;">
     </div>
 </div>
+
+<script>
+    function selectMood(element, mood) {
+        // Remove 'selected' class from all mood options
+        document.querySelectorAll('.img-option').forEach(el => el.classList.remove('selected'));
+
+        // Add 'selected' class to the clicked mood
+        element.classList.add('selected');
+
+        // Set the hidden input value
+        document.getElementById('selectedMood').value = mood;
+    }
+</script>
+
 {% endblock content %}

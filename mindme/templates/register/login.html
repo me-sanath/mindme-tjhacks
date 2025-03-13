@@ -1,36 +1,47 @@
-
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
 
-    <div class="uk-grid" style="background-color: #FE8181; height: 100vh;">
-        <div class="uk-position-center" style="background-color: #EBE8D5; border-radius: 60px; width: 400px;height: 75vh; padding: 0px;">
+<div class="uk-grid" style="background-color: #FE8181; height: 100vh;">
+    <div class="uk-position-center" style="background-color: #EBE8D5; border-radius: 60px; width: 400px;height: 75vh; padding: 0px;">
+        <div>
+            <img class="uk-align-center" src="{% static 'mood/logo.png' %}" alt="MindMe Logo" 
+                style="height: 150px; width: auto; margin-top: 20px; margin-bottom: 0px;">
+        </div>
+        <div class="uk-flex uk-flex-center">
             <div>
-                <img class="uk-align-center" src="{% static "logo.png" %}" alt="" style="height: 150px; width: auto; margin-top: 20px; margin-bottom: 0px;">
-            </div>
-            <div class="uk-flex uk-flex-center">
-                <div>
-                    <div class="uk-text-large uk-text-bold uk-text-center" style="padding-bottom: 40px;">
-                        Login
-                    </div>
-                    
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        <input type="text" id="username" name="username" placeholder="Username" style="width: 290px; height: 60px; border-style: none; border-radius: 20px; text-align: center;box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;"><br><br>
-                        <input type="password" id="password" name="password" placeholder="Password" style="width: 290px; height: 60px; border-style: none; border-radius: 20px; text-align: center;box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;"><br><br>
-                        <div class="uk-text-bold uk-text-small">Don't have account? <a href="{% url "register" %}">Sign up</a></div>
-                        <div class="uk-width-1-1 uk-flex uk-flex-center " style="padding-top: 20px;">
-                            <button type="submit" class="uk-button-default submitbutton">login</button>
-                            
-                        </div>
-                    </form>
+                <div class="uk-text-large uk-text-bold uk-text-center" style="padding-bottom: 40px;">
+                    Login
                 </div>
-            </div>
 
-            
+                {% if error_message %}
+                    <script>
+                        alert("{{ error_message }}");  // Show pop-up for invalid credentials
+                    </script>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <input type="text" id="username" name="username" placeholder="Username" required 
+                    style="width: 290px; height: 60px; border-style: none; border-radius: 20px; text-align: center;box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
+                    <br><br>
+
+                    <input type="password" id="password" name="password" placeholder="Password" required 
+                    style="width: 290px; height: 60px; border-style: none; border-radius: 20px; text-align: center;box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
+                    <br><br>
+
+                    <div class="uk-text-bold uk-text-small">
+                        Don't have an account? <a href="{% url 'register' %}">Sign up</a>
+                    </div>
+
+                    <div class="uk-width-1-1 uk-flex uk-flex-center" style="padding-top: 20px;">
+                        <button type="submit" class="uk-button-default submitbutton">Login</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-    
+</div>
 
 {% endblock content %}

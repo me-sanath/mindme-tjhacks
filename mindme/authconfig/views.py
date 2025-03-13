@@ -1,83 +1,98 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 def login_view(request):
+    error_message = None  # Store error messages
+
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
-            return redirect('dashboard')  # Redirect to a home page or any other page
+            return redirect('dashboard')  # Redirect to dashboard after login
         else:
-            return HttpResponse('Invalid credentials')
-    return render(request, 'register/login.html')
+            error_message = "Invalid username or password! Please try again."
+
+    return render(request, 'register/login.html', {'error_message': error_message})
+
 
 def logout_view(request):
     logout(request)
     return redirect('login')
 
+def about(request):
+    return render(request, 'about.html')
+
+
 def register_view(request):
+    error_message = None  # Store error messages
+
     if request.method == 'POST':
-        username = request.POST['username']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        form = UserCreationForm({
-            'username': username,
-            'password1': password1,
-            'password2': password2
-        })
-        if form.is_valid():
-            user = form.save()
-            user = authenticate(username=username, password=password1)
-            login(request, user)
-            return redirect('home')  # Redirect to a home page or any other page
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+
+        if password1 != password2:
+            error_message = "Passwords do not match!"
+        elif User.objects.filter(username=username).exists():
+            error_message = "Username already taken!"
         else:
-            return render(request, 'register/register.html', {'form': form})
-    else:
-        form = UserCreationForm()
-    return render(request, 'register/register.html', {'form': form})
+            user = User.objects.create_user(username=username, password=password1)
+            user.save()
+            user = authenticate(username=username, password=password1)
+            login(request, user)  # Auto login after signup
+            return redirect('dashboard')
+
+    return render(request, 'register/register.html', {'error_message': error_message})
+
 
 def home(request):
-    return render(request,'home.html')
+    return render(request, 'home.html')
+
 
 def dash(request):
-    return render(request,'dashboard.html')
+    return render(request, 'dashboard.html')
+
 
 def questionaire_page(request):
-    return render(request,'questionaire.html')
+    return render(request, 'questionaire.html')
+
+def ques_view(request):
+    return render(request, 'ques.html')
 
 def results(request):
-        # Assuming you're retrieving mood from query parameters
-        mood = request.GET.get('mood', 'neutral')
-        print(mood)
-        if mood == 'good':
-            context = {
-                'title': 'Happy!',
-                'image_src': 'mood/happy.jpg',
-                'message': 'You are doing well! Keep up the positive outlook.',
-                'background_image': 'good_mood_background.jpeg'
-            }
-        elif mood == 'bad':
-            context = {
-                'title': 'You gotta improve :)',
-                'image_src': 'mood/sad.jpg',
-                'message': 'Feeling down? It\'s okay. Take some time for self-care.',
-                'background_image': 'bad_mood_background.jpeg'
-            }
-        else:
-            context = {
-                'title': 'On Balance',
-                'image_src': 'mood/smily.png',
-                'message': 'Your mood is average. Reflect on what could improve.',
-                'background_image': 'neutral_mood_background.jpeg'
-            }
-        return render(request, 'result.html', context)
+    mood = request.GET.get('mood', 'neutral')
+    print(f"🔍 Debug: Mood received -> {mood}")
+
+    if mood == 'good':
+        context = {
+            'title': 'Happy!',
+            'image_src': 'mood/happy.jpg',
+            'message': 'You are doing well! Keep up the positive outlook.',
+        }
+    elif mood == 'bad':
+        context = {
+            'title': 'You gotta improve :)',
+            'image_src': 'mood/sad.jpg',
+            'message': "Feeling down? It's okay. Take some time for self-care.",
+        }
+    else:
+        context = {
+            'title': 'On Balance',
+            'image_src': 'mood/smily.png',
+            'message': 'Your mood is average. Reflect on what could improve.',
+        }
+    return render(request, 'result.html', context)
+
 
 def ques(request):
-    return render(request,'ques.html')
+    return render(request, 'ques.html')
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -230,3 +245,4 @@ OPTIONS = [
         {"text": "A phone with a helpline number displayed on the screen", "image": "helpline.png"}
     ]
 ]
+

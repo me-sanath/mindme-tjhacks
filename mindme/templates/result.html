@@ -2,24 +2,116 @@
 {% load static %}
 {% block content %}
 
-<div uk-grid class="uk-width-1-1" style="height: 100vh">
+<div uk-grid class="uk-width-1-1" style="height: 100vh;">
     <div class="uk-width-1-6" style="background-color: #FE8181; height: 100%;"></div>
     <div style="display: block; overflow: hidden; height: 100%; position: relative;">
         <div class="uk-flex uk-flex-center uk-width-1-1 uk-height-1-1" style="position: absolute;">
-            <div style="width: 50%; height:60%; background-color: white; margin-top: 100px; margin-left: 60px; border-radius: 25px; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px; border-width: 2px; border-color: black;">
+            <div style="width: 50%; height: 60%; background-color: white; margin-top: 100px; margin-left: 60px; border-radius: 25px; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px; border-width: 2px; border-color: black;">
                 <div class="uk-width-1-1 uk-flex uk-flex-center">
-                    <div>
-                        <div class="uk-text-large uk-text-bold uk-padding hero-font uk-text-center" style="font-size: 40px;">{{ title }}</div>
-                        <img src="{% static image_src %}" alt="" style="height: 80px; margin-left: 40%;">
-                        <div style="overflow-wrap: break-word; margin-top: 50px; font-size: 18px;" class="uk-align-center uk-text-center uk-text-bold hero-font description">
-                            {{ message }}
-                        </div>
-                    </div>  
+                    <div id="result-content">
+                        <!-- Content will be populated dynamically using JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
-        <img src="{% static 'res_bck.jpeg' %}" alt="" style="margin-top: 40vh;">
+        <img src="{% static 'mood/res_bck.jpeg' %}" alt="Background Image" style="margin-top: 40vh;">
     </div>
 </div>
+
+<script>
+    // Function to evaluate mood based on choices
+    function evaluateMood(choices) {
+        const scores = {
+            "A person laughing with friends": 2,
+            "A person calmly meditating": 2,
+            "A person looking worried with furrowed brow": -1,
+            "A person with a blank expression": 0,
+            "A person looking well-rested and smiling getting out of bed": 2,
+            "A person tossing and turning in bed at night": -1,
+            "A person hitting the snooze button on their alarm clock": 0,
+            "A person yawning during the day": -1,
+            "A person running energetically outdoors": 2,
+            "A person walking briskly with a determined look": 1,
+            "A person slowly dragging themselves through the day": -1,
+            "A person slumped on a couch feeling drained": -2,
+            "A group of friends laughing and having fun together": 2,
+            "A person enjoying a quiet coffee date with one friend": 1,
+            "A person scrolling through social media alone": 0,
+            "An empty park bench": -1,
+            "A person taking deep breaths and focusing on their meditation": 2,
+            "A person listening to calming music with headphones on": 1,
+            "A person yelling into a pillow": -1,
+            "A person clenching their fists in frustration": -2,
+            "A person looking at a vision board with a determined expression": 2,
+            "A person climbing a mountain with a sense of accomplishment": 2,
+            "A person looking lost and unsure in a forest": -1,
+            "A person crumpling up a piece of paper with frustration": -2,
+            "A person smiling and confidently looking in the mirror": 2,
+            "A person exercising and taking care of their physical health": 1,
+            "A person hiding their body under baggy clothes": -1,
+            "A person on a scale looking down with disappointment": -2,
+            "A beautiful sunrise with a hopeful message": 2,
+            "A path leading up a hilltop with a bright future ahead": 1,
+            "A dark and stormy sky": -2,
+            "A dead end with nowhere to go": -2,
+            "A person talking to a therapist and feeling listened to": 2,
+            "A person holding hands with a supportive friend": 1,
+            "A person sitting alone with a question mark above their head": 0,
+            "A phone with a helpline number displayed on the screen": 1
+        };
+
+        const totalScore = choices.reduce((acc, choice) => acc + scores[choice], 0);
+
+        return totalScore;
+    }
+
+    // Function to display result based on score
+    function displayResult(score) {
+        const resultDiv = document.getElementById('result-content');
+        let content = '';
+
+        if (score >= 10) {
+            content = `
+                <div class="uk-text-large uk-text-bold uk-padding hero-font uk-text-center" style="font-size: 40px;">Hurray!!</div>
+                <img src="{% static 'images/result_icon2.gif' %}" alt="Smiley Face" style="height: 90px; margin-left: 40%;">
+                <div style="overflow-wrap: break-word; margin-top: 50px; font-size: 18px;" class="uk-align-center uk-text-center uk-text-bold hero-font description">
+                    Excellent! Your responses indicate a strong sense of mental well-being. Keep up the great work!
+                </div>
+                <button class="custom-button uk-button-large uk-margin-top" style="position: absolute; bottom: 20px; right: 50px;" onclick="goToDashboard()">Continue</button>
+            `;
+        } else if (score >= 0) {
+            content = `
+                <div class="uk-text-large uk-text-bold uk-padding hero-font uk-text-center" style="font-size: 40px;">On Balance</div>
+                <img src="{% static 'images/result_icon.gif' %}" alt="Neutral Face" style="height: 90px; margin-left: 40%;">
+                <div style="overflow-wrap: break-word; margin-top: 50px; font-size: 18px;" class="uk-align-center uk-text-center uk-text-bold hero-font description">
+                    Doing well, but consider exploring support resources.
+                </div>
+                <button class="custom-button uk-button-large uk-margin-top" style="position: absolute; bottom: 20px; right: 50px;" onclick="goToDashboard()">Continue</button>
+            `;
+        } else {
+            content = `
+                <div class="uk-text-large uk-text-bold uk-padding hero-font uk-text-center" style="font-size: 40px;">Need Support</div>
+                <img src="{% static 'images/result_icon3.gif' %}" alt="Sad Face" style="height: 90px; margin-left: 40%;">
+                <div style="overflow-wrap: break-word; margin-top: 50px; font-size: 18px;" class="uk-align-center uk-text-center uk-text-bold hero-font description">
+                    We're here for you! Your responses indicate areas where you might need help. Don't hesitate to explore the resources included for further guidance.
+                </div>
+                <button class="custom-button uk-button-large uk-margin-top" style="position: absolute; bottom: 20px; right: 50px;" onclick="goToDashboard()">Continue</button>
+            `;
+        }
+
+        resultDiv.innerHTML = content;
+    }
+
+    // Get choices from URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const choices = JSON.parse(urlParams.get('choices'));
+
+    // Evaluate mood and display result
+    const score = evaluateMood(choices);
+    displayResult(score);
+    function goToDashboard() {
+        window.location.href = "{% url 'dashboard' %}";
+    }
+</script>
 
 {% endblock content %}

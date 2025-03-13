@@ -3,58 +3,211 @@
 {% block content %}
 <div>
     <style>
-        .chat-container {
-            background-color: #fe818147;
-            height: 91.5vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        body {
+            background-color: #F5F5F5;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
         }
-        .chat-input-container {
-            background-color: #FE8181;
-            width: 525px;
+
+        .header {
+            background-color: #3F6E97; /* A darker blue for contrast */
             height: 60px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            padding: 0 20px;
         }
-        .chat-input {
-            width: 90%;
-            padding: 10px;
+
+        .header img {
+            height: 50px;
         }
-        .chat-messages {
+
+        .header .logout-btn {
+            background-color: #FE8181; /* A vibrant red for the logout button */
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px;
+            gap: 20px;
+        }
+
+        .left-content {
+            width: 65%;
+        }
+
+        .test-box {
+            background-color: #FE8181; /* Matching the red theme */
             padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 400;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-box button {
+            background-color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #3F6E97;
+            font-weight: bold;
+            margin-top: 30px;
+            border: 2px solid #FE8181;
+            cursor: pointer;
+        }
+
+        .test-box button:hover {
+            background-color: #3F6E97;
+            color: white;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 10px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card img {
+            width: 250px;
+            height: 285px;
+            border-radius: 10px;
+        }
+
+        .card button {
+            margin-top: 10px;
+            background-color: #FE8181; /* Dark blue for buttons */
+            color: #fff;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .card button:hover {
+            background-color: #457B9D; /* Lighter blue on hover */
+        }
+
+        .chat-container {
+            background-color: #3F6E97;
+            width: 30%;
+            height: 80vh;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-messages {
+            flex: 1;
             overflow-y: auto;
-            flex-grow: 1;
+            padding-right: 10px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+        .chat-input-container {
+            background-color: #FE8181;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            bottom: 20px;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .chat-input:focus {
+            outline: none;
         }
     </style>
-    <div class=" uk-grid" style="background-color: #3F6E97; height: 60px;">
-        <div class="uk-width-2-3 uk-grid">
-            <div><img src="{% static 'logo.png'%}" alt="" style="height: 55px; margin-left: 5vw;"></div>
-            <div style="padding-top: 15px; color: white; font-size: large;" class="uk-text-bold uk-text-medium hero-font" >MindMe</div>            
+
+    <div class="header">
+        <div class="logo-container">
+            <img src="{% static 'mood/logo.png' %}" alt="Logo">
+            <span style="color: white; font-size: large; font-weight: bold; margin-left: 2rem;">MindMe</span>
         </div>
-        <div uk-grid class="synefont uk-text-bold" style="margin-top: 15px;">
-            <div><a href="{% url 'home'%}" class="nav-text">Home</a></div>
-        </div>
+        <a href="{% url 'logout' %}" class="logout-btn">LOGOUT</a>
     </div>
-    <div uk-grid style="margin-top: 0px;">
-        <div class="uk-width-2-3 uk-flex uk-flex-center">
-            <div style="margin: 40px;">
-                <div style="padding: 20px; font-size: xx-large; font-weight: bold;" class="synefont">If you can change your mind, you can change your life.</div>
-                <div uk-grid style="margin: 20px; margin-left: 160px;">
-                    <div class="card"><img src="{% static 'game.jpeg'%}" alt=""></div>
-                    <div class="card"><img src="{% static 'music.jpg'%}" alt=""></div>
+
+    <div class="main-content">
+        <div class="left-content">
+            <div class="test-box">Challenge yourself with our tests and see how you Score!<br>
+                <button onclick="window.location.href='{% url 'ques' %}';" class="start-test-btn">
+                    Start Test
+                </button>
+            </div>
+
+            <div class="card-container">
+                <div class="card">
+                    <img src="{% static 'mood/game.jpeg' %}" alt="Game">
+                    <button onclick="redirectToGame()">GET</button>
+                </div>
+                <div class="card">
+                    <img src="{% static 'mood/music.jpg' %}" alt="Music">
+                    <button onclick="redirectToMusic()">PLAY NOW</button>
                 </div>
             </div>
         </div>
-        <div class="uk-width-1-3 chat-container"  >
+
+        <div class="chat-container">
+            <h2 style="color: white; font-weight: bold; text-align:center">MindMe Assistant!</h2>
             <div class="chat-messages" id="chat-messages"></div>
-            <div class="uk-position-bottom-right uk-flex uk-flex-center chat-input-container">
+            <div class="chat-input-container">
                 <input class="chat-input" type="text" id="chat-input" placeholder="Start texting" onkeypress="sendMessage(event)">
             </div>
         </div>
     </div>
+
     <script>
+        function redirectToGame() {
+            window.location.href = "https://www.silvergames.com/en/t/stress-relief";
+        }
+        function redirectToMusic() {
+            window.location.href = "https://www.zenradio.com/";
+        }
         function sendMessage(event) {
             if (event.key === 'Enter') {
                 const input = document.getElementById('chat-input');
@@ -62,31 +215,24 @@
                 if (message) {
                     displayMessage('User', message);
                     input.value = '';
-                    
-                    // Send message to Flask server
+
                     fetch('http://localhost:5000/query', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ text: message })
                     })
                     .then(response => response.json())
                     .then(data => {
-                        // Display response from Flask server
-                        displayMessage('mindme', data.fulfillment);
+                        displayMessage('MindMe', data.fulfillment);
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                    .catch(error => { console.error('Error:', error); });
                 }
             }
         }
-    
+
         function displayMessage(sender, message) {
             const messagesContainer = document.getElementById('chat-messages');
             const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
             messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
             messagesContainer.appendChild(messageElement);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
